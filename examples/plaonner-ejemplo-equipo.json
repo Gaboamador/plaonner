@@ -1,0 +1,177 @@
+{
+  "app": "plaonner",
+  "version": 2,
+  "exportedAt": "2026-10-13T17:24:47.559Z",
+  "plan": {
+    "availableDays": 47,
+    "breaks": 1,
+    "segments": [
+      {
+        "start": null,
+        "end": null
+      },
+      {
+        "start": null,
+        "end": null
+      }
+    ],
+    "holidays": {},
+    "viewMonth": "2026-11",
+    "team": {
+      "people": [
+        {
+          "id": "p0",
+          "name": "Juan",
+          "responsibilityIds": [
+            "a"
+          ]
+        },
+        {
+          "id": "p1",
+          "name": "Ana",
+          "responsibilityIds": [
+            "a"
+          ]
+        },
+        {
+          "id": "p2",
+          "name": "Pedro",
+          "responsibilityIds": [
+            "a"
+          ]
+        },
+        {
+          "id": "p3",
+          "name": "María",
+          "responsibilityIds": [
+            "b"
+          ]
+        },
+        {
+          "id": "p4",
+          "name": "Luis",
+          "responsibilityIds": [
+            "b"
+          ]
+        },
+        {
+          "id": "p5",
+          "name": "Sofía",
+          "responsibilityIds": [
+            "b"
+          ]
+        },
+        {
+          "id": "p6",
+          "name": "Carlos",
+          "responsibilityIds": [
+            "c"
+          ]
+        },
+        {
+          "id": "p7",
+          "name": "Laura",
+          "responsibilityIds": [
+            "c"
+          ]
+        },
+        {
+          "id": "p8",
+          "name": "Diego",
+          "responsibilityIds": [
+            "c"
+          ]
+        },
+        {
+          "id": "p9",
+          "name": "Marta",
+          "responsibilityIds": [
+            "c"
+          ]
+        }
+      ],
+      "responsibilities": [
+        {
+          "id": "a",
+          "name": "Mesa de entradas",
+          "minCoverage": 1
+        },
+        {
+          "id": "b",
+          "name": "Análisis",
+          "minCoverage": 1
+        },
+        {
+          "id": "c",
+          "name": "Reportes",
+          "minCoverage": 1
+        }
+      ],
+      "vacations": [
+        {
+          "id": "v0",
+          "personId": "p0",
+          "start": "2026-11-02",
+          "end": "2026-11-06",
+          "status": "confirmed"
+        },
+        {
+          "id": "v1",
+          "personId": "p1",
+          "start": "2026-11-02",
+          "end": "2026-11-06",
+          "status": "confirmed"
+        },
+        {
+          "id": "v3",
+          "personId": "p3",
+          "start": "2026-11-02",
+          "end": "2026-11-06",
+          "status": "confirmed"
+        },
+        {
+          "id": "v4",
+          "personId": "p4",
+          "start": "2026-11-02",
+          "end": "2026-11-06",
+          "status": "confirmed"
+        },
+        {
+          "id": "v6",
+          "personId": "p6",
+          "start": "2026-11-02",
+          "end": "2026-11-06",
+          "status": "confirmed"
+        },
+        {
+          "id": "v7",
+          "personId": "p7",
+          "start": "2026-11-02",
+          "end": "2026-11-06",
+          "status": "confirmed"
+        },
+        {
+          "id": "v8",
+          "personId": "p8",
+          "start": "2026-11-02",
+          "end": "2026-11-06",
+          "status": "confirmed"
+        },
+        {
+          "id": "v2",
+          "personId": "p2",
+          "start": "2026-11-04",
+          "end": "2026-11-06",
+          "status": "confirmed"
+        },
+        {
+          "id": "v9",
+          "personId": "p9",
+          "start": "2026-11-16",
+          "end": "2026-11-20",
+          "status": "tentative"
+        }
+      ]
+    }
+  }
+}

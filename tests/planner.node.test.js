@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { addMonths, buildCalendarDates, daysInclusive, fromLocalDate, isISODate } from '../src/utils/dateUtils.js';
 import { adjustBreaks, applyCalendarSelection, calculateTotals, initialPlan, normalizePlan, setSegmentDate } from '../src/utils/plannerUtils.js';
-import { clearPlan, deserializePlan, readPlan, savePlan, serializePlan, STORAGE_KEY, LEGACY_HOLIDAYS_KEY } from '../src/services/storageService.js';
+import { clearPlan, deserializePlan, readPlan, savePlan, serializePlan, initialWorkspace, STORAGE_KEY, LEGACY_HOLIDAYS_KEY } from '../src/services/storageService.js';
 
 function storageMock() {
   const data = new Map();
@@ -92,7 +92,7 @@ test('migración de feriados del HTML anterior si comparten origen', () => {
 });
 
 test('respaldo JSON puede importarse y valida la versión', () => {
-  const plan = initialPlan(new Date(2026, 9, 1));
+  const plan = initialWorkspace();
   assert.deepEqual(deserializePlan(serializePlan(plan)), plan);
   assert.throws(() => deserializePlan('{"app":"otro","version":1,"plan":{}}'));
 });

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { addMonths, monthISO } from '../utils/dateUtils.js';
-import { adjustBreaks, applyCalendarSelection, initialPlan, setSegmentDate } from '../utils/plannerUtils.js';
-import { clearPlan, deserializePlan, readPlan, savePlan } from '../services/storageService.js';
+import { adjustBreaks, applyCalendarSelection, setSegmentDate } from '../utils/plannerUtils.js';
+import { clearPlan, deserializePlan, initialWorkspace, readPlan, savePlan } from '../services/storageService.js';
 
 export function useVacationPlanner() {
   const initial = useRef(null);
@@ -102,7 +102,7 @@ export function useVacationPlanner() {
     try { clearPlan(); setStorageState('empty'); setStorageError(null); }
     catch { setStorageState('error'); setStorageError('No se pudieron borrar los datos guardados.'); return false; }
     skipResetWrite.current = true;
-    setPlan(initialPlan());
+    setPlan(initialWorkspace());
     setActiveSegment(0);
     setActiveField('start');
     setMode('vacation');
@@ -118,7 +118,7 @@ export function useVacationPlanner() {
   }, []);
 
   return {
-    plan, activeSegment, activeField, mode, storageState, storageError,
+    plan, setPlan, activeSegment, activeField, mode, storageState, storageError,
     changeAvailableDays, changeBreaks, chooseSegment, chooseField, editSegmentDate,
     pickDate, toggleHoliday, removeHoliday, setMode, navigateMonth, goToday, reset, importPlan,
   };

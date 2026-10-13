@@ -12,3 +12,16 @@
 }
 @media (max-width:560px){.header{align-items:start;flex-direction:column}
 }
+
+.app{width:min(1500px,calc(100% - 32px))}
+/* Selector deslizante: el fondo se mueve; los botones permanecen en su lugar. */
+.appNav{--nav-gap:5px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));position:relative;isolation:isolate;gap:0;padding:var(--nav-gap);border:1px solid var(--border);border-radius:13px;background:#131c27;margin:0 0 20px;width:max-content;max-width:100%}
+.appNav::before{content:"";position:absolute;z-index:0;top:var(--nav-gap);bottom:var(--nav-gap);left:var(--nav-gap);width:calc((100% - 2 * var(--nav-gap)) / 2);border:1px solid #4775a4;border-radius:9px;background:linear-gradient(135deg,#314c66,#26394e);box-shadow:0 2px 10px rgba(0,0,0,.16);pointer-events:none;transform:translateX(0);transition:transform 340ms cubic-bezier(.2,.8,.2,1)}
+.appNav.navPersonal::before{transform:translateX(100%)}
+.appNav button{position:relative;z-index:1;border:1px solid transparent;background:transparent;min-width:130px;font-size:13px;transition:color 200ms ease;color:var(--muted)}
+.appNav button:hover{background:transparent;border-color:transparent;color:var(--text)}
+.appNav .activeNav{color:#fff;background:transparent;border-color:transparent}
+.appNav button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.appFooter{max-width:620px;margin:10px auto 30px}.appFooter>section{padding:18px;background:var(--panel);border:1px solid var(--border);border-radius:14px}
+@media(max-width:560px){.app{width:calc(100% - 18px)}.appNav{width:100%}.appNav button{min-width:0}}
+@media(prefers-reduced-motion:reduce){.appNav::before,.appNav button{transition:none}}

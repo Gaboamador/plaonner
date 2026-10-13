@@ -40,7 +40,7 @@ export default function StorageControls({ plan, status, error, onReset, onImport
         <span aria-hidden="true">{status === 'saved' ? '✓' : status === 'error' ? '!' : '○'}</span> {statusLabel}
       </div>
       {error && <p className={styles.errorText}>{error}</p>}
-      <p className={styles.help}>Los datos se guardan automáticamente en este navegador, no en una cuenta online.</p>
+      <p className={styles.help}>Los datos personales y del equipo se guardan sólo en este navegador. Para compartirlos, exportá un JSON y pedí que lo importen en otro dispositivo. La importación reemplaza todos los datos locales.</p>
       <div className={styles.backupActions}>
         <button type="button" onClick={exportJson}>Exportar JSON</button>
         <button type="button" onClick={() => fileInput.current?.click()}>Importar JSON</button>
@@ -49,7 +49,7 @@ export default function StorageControls({ plan, status, error, onReset, onImport
       {importError && <p className={styles.errorText} role="alert">{importError}</p>}
       {!confirmReset ? <button type="button" className={styles.resetButton} onClick={() => setConfirmReset(true)}>Borrar datos y reiniciar</button>
         : <div className={styles.confirm} role="group" aria-label="Confirmación para borrar datos">
-            <p>¿Borrar todos los tramos, feriados y preferencias guardados en este navegador?</p>
+            <p>¿Borrar los tramos personales, los feriados, las personas, responsabilidades y vacaciones del equipo guardados en este navegador?</p>
             <div className={styles.backupActions}>
               <button type="button" onClick={() => setConfirmReset(false)}>Cancelar</button>
               <button type="button" className={styles.danger} onClick={() => { if (onReset()) { setConfirmReset(false); setImportError(''); } }}>Sí, borrar todo</button>

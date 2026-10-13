@@ -1,160 +1,123 @@
-# Plaonner
+# Plaonner · Calculadora + organización de vacaciones del equipo
 
-Calculadora de vacaciones en **React + Vite**. Permite elegir tramos de vacaciones, contar días corridos inclusivos, configurar quiebres, marcar feriados y conservar la planificación en `localStorage`.
+Aplicación estática **React 19 + Vite 6**, sin backend ni autenticación. Parte de la calculadora individual original y agrega un calendario de equipo con responsabilidades, cobertura mínima, simulación de ausencias y resúmenes.
 
-El diseño y la interacción de selección en dos clics provienen de **Calculadora vacaciones - selector mejorado.html**. No utiliza backend, usuarios, autenticación, Firebase ni ninguna conexión a una base de datos.
+## Requisitos e instalación
 
-## Requisitos
+- Node.js **22.12.0 o superior dentro de la línea compatible con las dependencias instaladas**; se conserva el `package.json` recibido, no hay necesidad de actualizar Node para estos cambios.
+- npm; opcionalmente, Netlify CLI, que ya viene como dependencia de desarrollo.
 
-- **Node.js 22.13 o superior** (recomendado: una versión LTS reciente de Node 22 o superior).
-- npm, incluido con Node.js.
-- Una cuenta de Netlify para publicar; no hace falta para trabajar localmente.
-
-## 1. Instalar y usar en Windows PowerShell
-
-Descomprimí el ZIP, abrí PowerShell dentro de la carpeta `plaonner` (la que contiene `package.json`) y ejecutá:
+Desde PowerShell, en la carpeta que contiene `package.json`:
 
 ```powershell
-node --version
 npm install
 npm run dev
 ```
 
-Abrí la dirección local que muestre Vite, habitualmente `http://localhost:5173/`.
-
-**Importante:** la carpeta `.netlify` no forma parte del ZIP porque el sitio todavía no está creado. No necesitás credenciales de Netlify para usar la app en tu PC.
-
-## 2. Verificar antes de publicar
+Visitar la dirección de Vite (normalmente <http://localhost:5173>). Para validar:
 
 ```powershell
 npm run test:logic
 npm test
 npm run build
-```
-
-Los tests de `test:logic` usan únicamente Node. Los tests de `npm test` usan Vitest. Los tests de integración con navegador son opcionales; para ejecutarlos la primera vez:
-
-```powershell
-npx playwright install chromium
+npx playwright install chromium # sólo si no está instalado
 npm run test:e2e
 ```
 
-También podés ejecutar `npm run test:all` (lógica + Vitest + Playwright). El directorio `dist/` se crea con `npm run build` y **no** se sube a Git (ver `.gitignore`).
+`npm run test:all` ejecuta los tres grupos de pruebas.
 
-## 3. Configurar Netlify por primera vez (SIN GitHub)
+## Qué hay de nuevo
 
-Todo se hace desde la raíz de `plaonner`, después de `npm install`.
+La barra de navegación abre **Equipo** por defecto, con selector animado por CSS Modules para pasar a **Mis vacaciones** (calculadora individual existente). En Equipo:
 
-### 3.1 Autenticar tu cuenta
+1. Abrir **Personas y tareas** y registrar una o varias responsabilidades, cada una con una cantidad mínima de integrantes disponibles (1 por defecto).
+2. Agregar personas sin un límite fijo de diez. Se pueden asignar varias responsabilidades a la misma persona.
+3. Registrar múltiples períodos por persona, indicando fechas inclusivas y estado **Confirmado** o **Tentativo**. Los períodos pueden editarse/eliminarse desde la gestión o el calendario diario.
+4. En **Calendario y resumen**, navegar por meses con controles junto al calendario y filtrar por responsabilidad. Alternar **Por día** (línea de tiempo coloreada, personas ausentes y cobertura) y **Por semana** (días corridos por persona y semana completa, incluyendo fines de semana y feriados, como requiere la contabilidad de vacaciones).
+5. Revisar los indicadores, las alertas por responsabilidad y el resumen semanal. Al cargar o editar un período se simula su efecto **antes** de guardar.
+
+**Regla de cobertura:** para cada día laboral (lunes a viernes, salvo feriados marcados en «Mis vacaciones»), cada responsabilidad debe tener como mínimo su número configurado de integrantes **no ausentes por vacaciones confirmadas**. Una superposición es informativa; únicamente hay alerta cuando la disponibilidad cae por debajo del mínimo. Las vacaciones tentativas se muestran, pero no restan disponibilidad hasta confirmarse. Una persona con dos períodos superpuestos sólo cuenta una vez por día. Una persona asignada a varias responsabilidades cuenta como disponible en todas ellas: Plaonner evalúa cobertura por grupo, **no** simultaneidad real de asignaciones operativas.
+
+La vista semanal y su resumen cuentan **días corridos** de vacaciones confirmadas (lunes a domingo, incluso feriados y cuando la semana cruza de mes). La cobertura y sus alertas se siguen evaluando **sólo en días laborables**. Los períodos superpuestos no duplican días de una misma persona. Por ejemplo, del 28/09/2026 al 09/10/2026 son 7 días en la primera semana y 5 en la segunda: 12 en total.
+
+### Datos de muestra
+
+El archivo `examples/plaonner-ejemplo-equipo.json` contiene **diez integrantes ficticios, tres responsabilidades y vacaciones de ejemplo**, incluyendo una superposición crítica. Usá **Importar JSON** para cargarlo. Antes de importarlo, exportá tus datos actuales: **importar reemplaza la planificación completa**, no combina archivos.
+
+## Persistencia, migración y privacidad
+
+El almacenamiento es exclusivamente local. La clave histórica se conserva: `plaonner.planning.v1`. Cambia el **formato del contenido a versión 2** (`{ version:2, plan:{ ..., team: { people, responsibilities, vacations } } }`).
+
+- Al abrir una instalación previa con datos v1, se migran automáticamente **tramos individuales, días disponibles, feriados y mes**. Se crea un equipo vacío. No hay que limpiar el `localStorage`.
+- **Importar JSON** acepta respaldos **v1 y v2**; el respaldo que se exporta ahora es **v2** e incluye datos de ambas secciones.
+- **Borrar datos y reiniciar** borra ambas secciones con una confirmación.
+- Los datos quedan en el navegador y en la URL/origen donde se usen. **No** se sincronizan entre computadoras: cada dispositivo importa su copia del JSON. Los cambios de una copia **no** actualizan las otras; acordar quién distribuye el respaldo actualizado.
+- No existe «rol administrador» ni contraseña hardcodeada: las opciones de gestión están disponibles para quien tiene los datos en su navegador. **No se publican datos personales del equipo en el repositorio ni en el deploy**.
+
+### Archivos de datos y cambios futuros
+
+Las entidades del módulo Equipo usan IDs y relaciones, separadas de los componentes. El motor de cobertura (`src/utils/teamUtils.js`) no conoce `localStorage` ni React. Esto facilita la futura conexión a un backend sin reescribir las reglas de negocio. No se recomienda cargar datos sensibles si se van a distribuir copias del JSON sin controles de acceso.
+
+## Deploy manual a Netlify (sin GitHub ni CI)
+
+**Este ZIP no incluye `.netlify/state.json`** para no sobrescribir el enlace local que ya tenés con tu sitio existente. Si copiás sus archivos sobre tu carpeta Plaonner actual, el vínculo se conserva.
 
 ```powershell
-npx netlify login
-```
-
-Se abrirá el navegador para autorizar la CLI con tu cuenta Netlify.
-
-### 3.2 Crear y vincular un sitio vacío
-
-```powershell
-npx netlify sites:create --name plaonner --account-slug gaboamador
-```
-
-La opción `--account-slug gaboamador` se basa en el identificador de tu equipo que aparece en la URL de Netlify. Si tu equipo tiene otro identificador, modificá esa opción. La disponibilidad real del subdominio se confirma **cuando Netlify acepta la creación**: que una URL muestre «Site not found» no reserva ese nombre.
-
-Este comando crea un proyecto **sin conectar ningún repositorio Git** y vincula el directorio actual al nuevo sitio. El vínculo se guarda en `.netlify/state.json`, ignorado por Git. Si ya creaste el sitio manualmente en el panel, usá en su lugar:
-
-```powershell
-npx netlify link
-```
-
-Seleccioná **Link this directory to an existing project**, elegí el sitio `plaonner` y asegurate de que quede asociado a tu equipo. **No ejecutes `netlify init`**: ese comando configura CI / despliegue continuo, que justamente queremos evitar.
-
-### 3.3 Publicar manualmente
-
-```powershell
+npm run build
 npm run deploy
 ```
 
-El script hace dos pasos, en este orden:
-
-1. `npm run build` — genera el build local en `dist/`.
-2. `netlify deploy --prod --no-build --dir=dist` — sube esos archivos a producción en el sitio vinculado.
-
-Cuando termine correctamente, entrá a <https://plaonner.netlify.app/>.
-
-**Sólo `npm run deploy` publica en producción.** Ni `git push`, ni `npm install`, ni `npm run build`, ni `npm test` hacen deploy. No hay workflow de GitHub Actions, webhook, ni conexión Git ↔ Netlify. `npm run deploy:preview` realiza una publicación manual de prueba sin tocar producción.
-
-Si descargás el proyecto en otra computadora, después de `npm install` repetí `npx netlify login` y `npx netlify link` (no crees otro sitio). Una vez vinculado, usá normalmente `npm run deploy`.
-
-## 4. Persistencia y privacidad
-
-Se almacena automáticamente en `localStorage`, bajo la clave `plaonner.planning.v1`:
-
-- Días disponibles y quiebres.
-- Fechas de inicio/fin de todos los tramos.
-- Feriados personalizados.
-- Mes que se estaba mostrando.
-
-Los números calculados se recomputan al cargar. Los campos visuales de selección (Inicio/Fin activo) comienzan en su estado normal en cada visita. Se indica si los datos están guardados o si el navegador impidió guardarlos.
-
-**Borrar datos y reiniciar** pide confirmación, elimina las claves de Plaonner del almacenamiento y restaura el estado inicial. No escribe de nuevo el estado vacío hasta que el usuario haga otra modificación.
-
-**Exportar JSON** descarga una copia de la planificación. **Importar JSON** recupera un archivo de respaldo del mismo formato; reemplaza los datos actuales. No se manda información a ningún servidor salvo el código estático cuando se publica el proyecto.
-
-`localStorage` es específico de cada navegador, dispositivo y origen. Las planificaciones hechas en `localhost`, `file://` o en `plaonner.netlify.app` **no se sincronizan ni se copian automáticamente**. Para trasladarlas, usá el respaldo JSON. Los feriados del HTML original se migran automáticamente **solo si se ejecuta en el mismo origen y el navegador permite acceder a la misma clave antigua**.
-
-## 5. Estructura
-
-```text
-plaonner/
-├── src/
-│   ├── components/
-│   │   ├── Calendar/              Calendario, rangos y previsualización
-│   │   ├── SelectionBar/          Selector Inicio/Fin activo
-│   │   ├── VacationSegments/      Tramos y fechas editables
-│   │   ├── VacationSummary/       Días tomados y restantes
-│   │   ├── HolidayManager/        Feriados personalizados
-│   │   └── StorageControls/       Respaldo y restablecimiento
-│   ├── hooks/
-│   │   └── useVacationPlanner.js  Estado e interacción
-│   ├── services/
-│   │   └── storageService.js      Versión, lectura y escritura de JSON
-│   ├── utils/
-│   │   ├── dateUtils.js           Fechas locales, rangos inclusivos
-│   │   └── plannerUtils.js        Reglas puras de negocio
-│   ├── styles/                    Tema base y layout
-│   ├── App.jsx
-│   └── main.jsx
-├── tests/
-│   ├── planner.node.test.js
-│   ├── planner.test.js
-│   └── e2e/plaonner.spec.js
-├── index.html
-├── netlify.toml
-├── package.json
-└── vite.config.js
-```
-
-Los componentes usan CSS Modules, y los estilos generales (`body`, `button`, tokens CSS y algunos elementos compartidos) se encuentran en `src/styles/global.css`.
-
-## 6. Git independiente de Netlify
-
-Podés inicializar Git y configurar cualquier repositorio remoto sin afectar la publicación:
+`npm run deploy` ejecuta el build local y `netlify deploy --prod --no-build --dir=dist`. Para una publicación de prueba:
 
 ```powershell
-git init
-git add .
-git commit -m "[NUEVO] Crear Plaonner con React, persistencia local y deploy manual"
+npm run deploy:preview
 ```
 
-Cuando quieras, vinculá un remoto y usá `git push` de forma habitual. **Netlify no recibe los pushes ni despliega automáticamente** salvo que lo conectes explícitamente más adelante.
+En una carpeta nueva, vinculala **al sitio existente**, sin volver a crearlo:
 
-## 7. Si falla un comando
+```powershell
+npx netlify login
+npx netlify link
+```
 
-- `npm install` / `npm run build`: comprobá `node --version` (mínimo 22.13).
-- `npx netlify sites:create`: revisá que estés autenticado, que el `account-slug` sea correcto y que `plaonner` esté disponible.
-- `npm run deploy`: confirmá el vínculo ejecutando `npx netlify status`; si no corresponde al sitio elegido, ejecutá `npx netlify link`.
-- El sitio muestra datos distintos de los locales: el almacenamiento no se comparte entre dominios ni dispositivos; exportá/importá un respaldo JSON.
-- No querés que haya deploy automático: no uses `netlify init`, ni la opción «Import from Git» del panel de Netlify; creá un proyecto vacío con CLI.
+Seleccionar `plaonner` y luego usar `npm run deploy`. **`git push` nunca despliega**, porque no hay conexión Git–Netlify ni workflow de publicación.
 
-Documentación oficial: <https://docs.netlify.com/api-and-cli-guides/cli-guides/get-started-with-cli/> y <https://cli.netlify.com/commands/sites/>.
+## Estructura relevante
+
+```text
+src/
+  App.jsx                               Navegación y shell
+  components/Calendar/                 Calculadora individual (sin rediseños)
+  components/TeamWorkspace/
+    TeamWorkspace.jsx                  Dashboard, dos grillas, alertas
+    TeamManager.jsx                    ABM personas y responsabilidades
+    VacationEditor.jsx                 Editor y simulador de períodos
+    TeamWorkspace.module.css           Estilos del equipo
+  hooks/useVacationPlanner.js          Estado común y persistencia
+  hooks/useTeamPlanner.js              Acciones de edición del equipo
+  utils/teamUtils.js                   Cobertura, fechas y resúmenes puros
+  services/storageService.js           Datos v1/v2, importación y exportación
+  utils/dateUtils.js                   Fechas civiles ISO
+  utils/plannerUtils.js                Reglas de la calculadora original
+tests/
+  planner.node.test.js                 Tests existentes
+  team.node.test.js                    Tests de cobertura y migración
+  e2e/plaonner.spec.js                 Tests originales de navegador
+  e2e/team.spec.js                     Flujos nuevos en navegador
+examples/plaonner-ejemplo-equipo.json  Datos ficticios para probar
+```
+
+## Notas de mantenimiento
+
+- Se conservan los scripts, versiones de dependencias y `package-lock.json` del proyecto recibido, incluyendo la política de **deploy exclusivamente manual**.
+- No ejecutar `npm audit fix --force`: puede alterar mayor versions sin validar compatibilidad con Node 22.12.
+- Antes de reemplazar archivos o importar JSON, hacer respaldo si hay datos que no se quieren perder.
+
+## Ajustes v2.1 · Calendario y navegación
+
+- **Equipo** abre por defecto, a la izquierda de **Mis vacaciones**. La barra superior tiene un indicador deslizante implementado sólo con CSS Modules (`prefers-reduced-motion` desactiva la animación cuando está indicado).
+- Los controles de mes del equipo están **junto al calendario**, tanto en la vista diaria como en la semanal.
+- La grilla semanal y el resumen semanal muestran **días corridos** de vacaciones confirmadas, incluidos sábados, domingos y feriados, sin duplicar fechas por vacaciones solapadas. Cada semana incluye sus siete días completos, aunque cruce de mes.
+- **Las alertas de cobertura no cambiaron de criterio**: siguen evaluándose sólo en días laborables, excluyendo feriados. La columna «Pico hábil» del resumen semanal también mantiene ese criterio.
+- No cambian `package.json`, `package-lock.json`, `netlify.toml`, la persistencia ni la exportación/importación.
+- Regresión incluida: **28/09/2026–09/10/2026 = 7 + 5 = 12 días corridos**.
