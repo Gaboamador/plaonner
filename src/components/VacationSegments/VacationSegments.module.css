@@ -1,0 +1,25 @@
+/* Estilos migrados de la calculadora HTML original. */
+.segments{display:flex;flex-direction:column;gap:10px}
+.segment-card{--segment-color:var(--accent);border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#141b24;transition:border-color .15s,box-shadow .15s}
+.segment-card.is-active{border-color:color-mix(in srgb,var(--segment-color) 60%,var(--border));box-shadow:0 0 0 1px color-mix(in srgb,var(--segment-color) 20%,transparent)}
+.segment-head{padding:10px 12px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:10px}
+.segment-head.active{background:color-mix(in srgb,var(--segment-color) 12%,transparent)}
+.segment-head:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.segment-title{display:flex;align-items:center;gap:8px;font-weight:700}
+.segment-days{font-size:12px;color:var(--muted)}
+.segment-body{padding:10px 12px 12px;border-top:1px solid var(--border);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.date-field{padding:8px;border:1px solid transparent;border-radius:10px;min-width:0;cursor:pointer;transition:background .15s,border-color .15s,box-shadow .15s}
+.date-field :global(.mini-label){margin-bottom:7px;font-weight:700;letter-spacing:.03em}
+.date-field input{font-size:12px;padding:10px 5px;cursor:pointer}
+.date-field.is-target{border-color:var(--segment-color);background:color-mix(in srgb,var(--segment-color) 15%,#141b24);box-shadow:0 0 0 2px color-mix(in srgb,var(--segment-color) 12%,transparent)}
+.date-field.is-target :global(.mini-label){color:var(--text)}
+.date-field.is-target :global(.mini-label)::after{content:" ●";color:var(--segment-color)}
+.date-field.is-target input{border-color:color-mix(in srgb,var(--segment-color) 65%,var(--border));background:#111b28}
+.date-field.is-target input:focus{outline:none;box-shadow:0 0 0 2px color-mix(in srgb,var(--segment-color) 22%,transparent)}
+@media (max-width:560px){.segment-body{grid-template-columns:1fr 1fr}
+}
+
+/* El encabezado pasó de div a button: neutralizar estilos globales. */
+.segment-head{width:100%;text-align:left;border:0;border-radius:0;background:transparent;color:inherit;font:inherit}
+.segment-head:hover{background:color-mix(in srgb,var(--segment-color) 8%,transparent);border-color:transparent}
+.segment-head.active:hover{background:color-mix(in srgb,var(--segment-color) 17%,transparent)}

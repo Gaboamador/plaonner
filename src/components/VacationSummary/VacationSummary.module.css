@@ -1,0 +1,8 @@
+/* Estilos migrados de la calculadora HTML original. */
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 18px}
+.metric{padding:12px;border-radius:12px;background:var(--panel2);border:1px solid var(--border)}
+.metric .k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.metric .v{font-size:24px;font-weight:800;margin-top:3px}
+.metric.full{grid-column:1/-1}
+.metric.ok .v{color:var(--ok)}
+.metric.over .v{color:var(--danger)}

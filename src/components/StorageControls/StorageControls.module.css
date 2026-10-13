@@ -1,0 +1,13 @@
+.storage{margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.status{display:flex;align-items:center;gap:8px;color:var(--ok);font-size:12px;font-weight:750}
+.status.error,.errorText{color:var(--danger)}
+.help{font-size:11px;line-height:1.5;color:var(--muted);margin:8px 0 12px}
+.errorText{font-size:12px;line-height:1.5}
+.backupActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.backupActions button{padding:9px 6px;font-size:12px}
+.resetButton{margin-top:10px;width:100%;color:#ffd4d8;border-color:rgba(255,123,134,.45);background:rgba(255,123,134,.07);font-size:12px}
+.resetButton:hover,.danger:hover{background:rgba(255,123,134,.16);border-color:var(--danger)}
+.confirm{margin-top:12px;padding:12px;background:rgba(255,123,134,.07);border:1px solid rgba(255,123,134,.45);border-radius:12px}
+.confirm p{font-size:12px;margin:0 0 10px;line-height:1.5}
+.danger{background:#542b36;color:#ffe0e2;border-color:var(--danger)}
+.srOnly{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}

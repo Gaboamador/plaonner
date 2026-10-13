@@ -1,0 +1,10 @@
+# Este archivo NO habilita despliegue continuo ni vincula Git.
+# Publicar exclusivamente con: npm run deploy
+[build]
+  publish = "dist"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

@@ -1,0 +1,13 @@
+/* Estilos migrados de la calculadora HTML original. */
+.holiday-tools{margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
+.mode-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.mode-btn.active{border-color:var(--accent);background:rgba(108,182,255,.12)}
+.holiday-name{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px 12px;outline:none;margin-bottom:10px}
+.holiday-name[hidden]{display:none}
+.holiday-list{display:flex;flex-direction:column;gap:7px;max-height:190px;overflow:auto}
+.holiday-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:#141b24}
+.holiday-item-main{min-width:0}
+.holiday-item-date{font-size:12px;font-weight:800;color:#ffd4d8}
+.holiday-item-name{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.holiday-remove{padding:4px 8px;font-size:12px}
+.holiday-empty{font-size:12px;color:var(--muted);padding:4px 0}
